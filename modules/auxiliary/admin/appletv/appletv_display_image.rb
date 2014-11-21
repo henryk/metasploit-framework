@@ -1,5 +1,5 @@
 ##
-# This module requires Metasploit: http//metasploit.com/download
+# This module requires Metasploit: http://metasploit.com/download
 # Current source: https://github.com/rapid7/metasploit-framework
 ##
 
@@ -15,8 +15,8 @@ class Metasploit4 < Msf::Auxiliary
       'Description'    => %q(
         This module will show an image on an AppleTV device for a period of time.
         Some AppleTV devices are actually password-protected, in that case please
-        set the PASSWORD datastore option. If you need to bruteforce the password,
-        you can try apple_login.rb.
+        set the PASSWORD datastore option. For password bruteforcing, please see
+        the module auxiliary/scanner/http/appletv_login.
       ),
       'Author'         =>
         [
