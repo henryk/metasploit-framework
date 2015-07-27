@@ -36,7 +36,8 @@ class Console::CommandDispatcher::Core
 
   @@load_opts = Rex::Parser::Arguments.new(
     "-l" => [ false, "List all available extensions" ],
-    "-h" => [ false, "Help menu."                    ])
+    "-h" => [ false, "Help menu."                    ],
+    "-c" => [ false, "Load command dispatcher only"  ])
 
   #
   # List of supported commands.
@@ -891,6 +892,9 @@ class Console::CommandDispatcher::Core
       args.unshift("-h")
     end
 
+    load_remote = true
+    mods = []
+
     @@load_opts.parse(args) { |opt, idx, val|
       case opt
       when "-l"
@@ -910,11 +914,15 @@ class Console::CommandDispatcher::Core
       when "-h"
         cmd_load_help
         return true
+      when "-c"
+        load_remote = false
+      else
+        mods << val
       end
     }
 
     # Load each of the modules
-    args.each { |m|
+    mods.each { |m|
       md = m.downcase
 
       if (extensions.include?(md))
@@ -925,8 +933,8 @@ class Console::CommandDispatcher::Core
       print("Loading extension #{md}...")
 
       begin
-        # Use the remote side, then load the client-side
-        if (client.core.use(md) == true)
+        # Use the remote side, unless requested otherwise, then load the client-side
+        if (!load_remote || client.core.use(md) == true)
           add_extension_client(md)
         end
       rescue
